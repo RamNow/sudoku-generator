@@ -6,17 +6,20 @@ from Sudoku.Generator import *
 def main() -> None:
     # setting difficulties and their cutoffs for each solve method
     difficulties = {
-        'easy': (35, 0),
-        'medium': (81, 5),
-        'hard': (81, 10),
-        'extreme': (81, 15)
+        'easy': (35, 5),
+        'medium': (81, 15),
+        'hard': (81, 20),
+        'extreme': (81, 30),
+        'insane': (81, 40),
     }
 
     # getting desired difficulty from command line
-    difficulty = difficulties[sys.argv[2]]
+    difficulty_key = sys.argv[2]
+    logical_cutoff, random_cutoff = difficulties[difficulty_key]
 
     # constructing generator object from puzzle file (space delimited columns, line delimited rows)
-    gen = Generator(sys.argv[1])
+    file = sys.argv[1]
+    gen = Generator(file)
 
     # applying 100 random transformations to puzzle
     gen.randomize(100)
@@ -25,12 +28,12 @@ def main() -> None:
     initial = gen.board.copy()
 
     # applying logical reduction with corresponding difficulty cutoff
-    gen.reduce_via_logical(difficulty[0])
+    gen.reduce_via_logical(logical_cutoff)
 
     # catching zero case
-    if difficulty[1] != 0:
+    if random_cutoff != 0:
         # applying random reduction with corresponding difficulty cutoff
-        gen.reduce_via_random(difficulty[1])
+        gen.reduce_via_random(random_cutoff)
 
     # getting copy after reductions are completed
     final = gen.board.copy()
