@@ -41,6 +41,11 @@ def main() -> None:
     # printing out board after reduction
     print("The generated board after removals was: \r\n\r\n{0}".format(final))
 
+    # solve the sudoku puzzle and print out the solution
+    solver = Solver(final)
+    solver.solve()
+    print("The solution to the puzzle is: \r\n\r\n{0}".format(solver.board))
+
 
 if __name__ == '__main__':
     main()
