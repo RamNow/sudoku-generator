@@ -3,7 +3,7 @@ import sys
 from Sudoku.Generator import *
 
 
-def main():
+def main() -> None:
     # setting difficulties and their cutoffs for each solve method
     difficulties = {
         'easy': (35, 0),

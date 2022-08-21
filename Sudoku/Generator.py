@@ -1,13 +1,12 @@
 import random
 from functools import reduce
 
-from Sudoku.Board import *
 from Sudoku.Solver import *
 
 
 class Generator:
 
-    def __init__(self, starting_file):
+    def __init__(self, starting_file) -> None:
         """Constructor for generator, reads in a space delimited."""
 
         # opening file
@@ -23,7 +22,7 @@ class Generator:
         # constructing board
         self.board = Board(numbers)
 
-    def randomize(self, iterations):
+    def randomize(self, iterations: int):
         """Randomizes an existing complete puzzle."""
 
         if len(self.board.get_used_cells()) != 81:
@@ -55,7 +54,7 @@ class Generator:
             elif case == 3:
                 self.board.swap_band(piece1, piece2)
 
-    def reduce_via_logical(self, cutoff=81):
+    def reduce_via_logical(self, cutoff: int = 81) -> None:
         """ Gets all possible values for a particular cell, if there is only one then we can remove that cell."""
         cells = self.board.get_used_cells()
         random.shuffle(cells)
@@ -66,7 +65,7 @@ class Generator:
             if cutoff == 0:
                 break
 
-    def reduce_via_random(self, cutoff=81):
+    def reduce_via_random(self, cutoff: int = 81) -> None:
         """Attempts to remove a cell and checks that solution is still unique."""
         temp = self.board
         existing = temp.get_used_cells()
@@ -108,7 +107,7 @@ class Generator:
             if cutoff == 0:
                 break
 
-    def get_current_state(self):
+    def get_current_state(self) -> str:
         """Returns current state of generator including number of empty cells and a representation of the puzzle."""
-        template = "There are currently %d starting cells.\n\rCurrent puzzle state:\n\r\n\r%s\n\r"
-        return template % (len(self.board.get_used_cells()), self.board.__str__())
+        return f"There are currently {(len(self.board.get_used_cells())):d} starting cells." \
+               f"\n\rCurrent puzzle state:\n\r\n\r{self.board.__str__():s}\n\r"

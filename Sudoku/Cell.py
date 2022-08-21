@@ -8,7 +8,6 @@ class Cell:
 
         self.value = 0
 
-    def __str__(self):
+    def __str__(self) -> str:
         """returns a string representation of cell (for debugging)"""
-        temp = (self.value, self.row, self.col, self.box)
-        return "Value: %d, Row: %d, Col: %d, Box: %d" % temp
+        return f"Value: {self.value:d}, Row: {self.row:d}, Col: {self.col:d}, Box: {self.box:d}"

@@ -1,9 +1,11 @@
+from typing import Optional
+
 from Sudoku.Cell import Cell
 
 
 class Board:
 
-    def __init__(self, numbers=None):
+    def __init__(self, numbers: Optional[list[int]] = None) -> None:
 
         # we keep list of cells and dictionaries to point to each cell
         # by various locations
@@ -41,34 +43,34 @@ class Board:
                 self.boxes[box].append(cell)
                 self.cells.append(cell)
 
-    def get_used_cells(self):
+    def get_used_cells(self) -> list[Cell]:
         """returning cells in puzzle that are not set to zero"""
         return [x for x in self.cells if x.value != 0]
 
-    def get_unused_cells(self):
+    def get_unused_cells(self) -> list[Cell]:
         """returning cells in puzzle that are set to zero"""
         return [x for x in self.cells if x.value == 0]
 
-    def get_possibles(self, cell):
+    def get_possibles(self, cell) -> list[int]:
         """returning all possible values that could be assigned to the cell provided as argument"""
         possibilities = self.rows[cell.row] + self.columns[cell.col] + self.boxes[cell.box]
         excluded = set([x.value for x in possibilities if x.value != 0 and x.value != cell.value])
         results = [x for x in range(1, 10) if x not in excluded]
         return results
 
-    def get_density(self, cell):
+    def get_density(self, cell) -> float:
         """calculates the density of a specific cell's context"""
         possibilities = self.rows[cell.row] + self.columns[cell.col] + self.boxes[cell.box]
         if cell.value != 0:
             possibilities.remove(cell)
         return len([x for x in set(possibilities) if x.value != 0]) / 20.0
 
-    def get_excluded(self, cell):
+    def get_excluded(self, cell) -> set[int]:
         """gets complement of possibles, values that cell cannot be"""
         possibilities = self.rows[cell.row] + self.columns[cell.col] + self.boxes[cell.box]
         return set([x.value for x in possibilities if x.value != 0 and x.value != cell.value])
 
-    def swap_row(self, row_index1, row_index2, allow=False):
+    def swap_row(self, row_index1, row_index2, allow=False) -> None:
         """swaps two rows"""
         if allow or row_index1 // 3 == row_index2 // 3:
             for x in range(0, len(self.rows[row_index2])):
@@ -78,7 +80,7 @@ class Board:
         else:
             raise Exception('Tried to swap non-familial rows.')
 
-    def swap_column(self, col_index1, col_index2, allow=False):
+    def swap_column(self, col_index1, col_index2, allow=False) -> None:
         """swaps two columns"""
         if allow or col_index1 // 3 == col_index2 // 3:
             for x in range(0, len(self.columns[col_index2])):
@@ -88,17 +90,17 @@ class Board:
         else:
             raise Exception('Tried to swap non-familial columns.')
 
-    def swap_stack(self, stack_index1, stack_index2):
+    def swap_stack(self, stack_index1, stack_index2) -> None:
         """swaps two stacks"""
         for x in range(0, 3):
             self.swap_column(stack_index1 * 3 + x, stack_index2 * 3 + x, True)
 
-    def swap_band(self, band_index1, band_index2):
+    def swap_band(self, band_index1, band_index2) -> None:
         """swaps two bands"""
         for x in range(0, 3):
             self.swap_row(band_index1 * 3 + x, band_index2 * 3 + x, True)
 
-    def copy(self):
+    def copy(self) -> 'Board':
         """copies the board"""
         b = Board()
         for row in range(0, len(self.rows)):
@@ -106,7 +108,7 @@ class Board:
                 b.rows[row][col].value = self.rows[row][col].value
         return b
 
-    def __str__(self):
+    def __str__(self) -> str:
         """returns string representation"""
         output = []
         for index, row in self.rows.items():
@@ -120,7 +122,7 @@ class Board:
             output.append('|'.join(new_set))
         return '\r\n'.join(output)
 
-    def html(self):
+    def html(self) -> str:
         """exporting puzzle to a html table for prettier visualization"""
         html = "<table>"
         for index, row in self.rows.items():

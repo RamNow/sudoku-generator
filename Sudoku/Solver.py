@@ -1,11 +1,14 @@
+from Sudoku.Board import Board
+
+
 class Solver:
 
-    def __init__(self, board):
+    def __init__(self, board: Board) -> None:
         """constructor for a solver, keeps a local copy of provided board"""
         self.board = board.copy()
         self.vacants = self.board.get_unused_cells()
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """checks to make sure each compartment contains"""
         valid = set(range(1, 10))
         for i, box in self.board.boxes.items():
@@ -19,7 +22,7 @@ class Solver:
                 return False
         return True
 
-    def solve(self):
+    def solve(self) -> bool:
         """solves a puzzle by moving forward and backwards through puzzle and testing values"""
         index = 0
         while -1 < index < len(self.vacants):
