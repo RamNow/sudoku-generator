@@ -1,12 +1,12 @@
 class Solver:
 
-    # constructor for a solver, keeps a local copy of provided board
     def __init__(self, board):
+        """constructor for a solver, keeps a local copy of provided board"""
         self.board = board.copy()
         self.vacants = self.board.get_unused_cells()
 
-    # checks to make sure each compartment contains
     def is_valid(self):
+        """checks to make sure each compartment contains"""
         valid = set(range(1, 10))
         for i, box in self.board.boxes.items():
             if not valid == set([x.value for x in box]):
@@ -19,9 +19,8 @@ class Solver:
                 return False
         return True
 
-    # solves a puzzle by moving forward and backwards through puzzle
-    # and testing values
     def solve(self):
+        """solves a puzzle by moving forward and backwards through puzzle and testing values"""
         index = 0
         while -1 < index < len(self.vacants):
             current = self.vacants[index]
