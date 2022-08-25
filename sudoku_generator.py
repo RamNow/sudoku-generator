@@ -1,22 +1,35 @@
 # !/usr/bin/python
+from email.policy import default
+import click
 import sys
 from Sudoku.Generator import *
 
+# setting difficulties and their cutoffs for each solve method
+difficulties = {
+    'easy': (35, 5),
+    'medium': (81, 15),
+    'hard': (81, 20),
+    'extreme': (81, 30),
+    'insane': (81, 40),
+}
 
-def main() -> None:
-    # setting difficulties and their cutoffs for each solve method
-    difficulties = {
-        'easy': (35, 0),
-        'medium': (81, 5),
-        'hard': (81, 10),
-        'extreme': (81, 15)
-    }
+@click.command()
+@click.option('-d', '--difficulty', 
+    default='medium', 
+    show_default=True,
+    help=f'The difficulty level of the sudoku: {[d for d in difficulties]}')
+@click.option('-f', '--file', 
+    default='base.txt',
+    help=f'The file to base the sudoku generation off from.')
+def main(difficulty: str, file: str) -> None:
+
+    click.echo(f"Generating Sudoku with difficulty '{difficulty}'")
 
     # getting desired difficulty from command line
-    difficulty = difficulties[sys.argv[2]]
+    logical_cutoff, random_cutoff = difficulties[difficulty]
 
     # constructing generator object from puzzle file (space delimited columns, line delimited rows)
-    gen = Generator(sys.argv[1])
+    gen = Generator(file)
 
     # applying 100 random transformations to puzzle
     gen.randomize(100)
@@ -25,12 +38,12 @@ def main() -> None:
     initial = gen.board.copy()
 
     # applying logical reduction with corresponding difficulty cutoff
-    gen.reduce_via_logical(difficulty[0])
+    gen.reduce_via_logical(logical_cutoff)
 
     # catching zero case
-    if difficulty[1] != 0:
+    if random_cutoff != 0:
         # applying random reduction with corresponding difficulty cutoff
-        gen.reduce_via_random(difficulty[1])
+        gen.reduce_via_random(random_cutoff)
 
     # getting copy after reductions are completed
     final = gen.board.copy()
